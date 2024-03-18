@@ -7,7 +7,8 @@ const initialState={
     name:null,
     token:null,
     isAdmin:false,
-    img:null
+    email:null,
+    phone:null,
 
 }
 
@@ -20,23 +21,27 @@ const initialState={
             state.name=action.payload.name;
             state.userId=action.payload._id;
             state.token=action.payload.token;
+            state.phone = action.payload.phone;
+            state.email = action.payload.email;
             state.isAdmin=action.payload.isAdmin;
-            state.img=action.payload.img;
         },
         logout:(state)=>{
-            state.isAuthenticated=true;
+            state.isAuthenticated=false;
             state.userId=null;
+            state.name=null;
             state.token=null;
+            state.phone = null;
+            state.email = null;
             state.isAdmin=false;
-            state.img=null;
 
         },
         checkUserAuthentication: (state) => {
             const jwt = localStorage.getItem('jwt');
             const id = localStorage.getItem('id');
-            const img = localStorage.getItem('img');
             const name=localStorage.getItem('name')
-            
+            const email=localStorage.getItem('email')
+            const phone=localStorage.getItem('phone')
+            console.log(phone);
             if (jwt) {
               const [, payloadBase64] = jwt.split('.'); // Split JWT token into parts and get the payload part
               const decodedPayload = JSON.parse(atob(payloadBase64));
@@ -44,8 +49,9 @@ const initialState={
               state.userId = id;
               state.name=name;
               state.token = jwt;
+              state.phone = phone;
+              state.email = email;
               state.isAdmin = decodedPayload.isAdmin || false;
-              state.img = img;
             }
           }
           

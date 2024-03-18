@@ -1,9 +1,10 @@
 import React ,{useEffect} from 'react'
 import './Signup.css'
-import { useNavigate } from 'react-router-dom';
 import {useFormik} from 'formik'
+import { useDispatch,useSelector } from "react-redux";
+import { checkUserAuthentication, logout } from "../../Redux/userSlice";
+import { useNavigate } from "react-router-dom";
 import validation from '../../utils/signupValidation';
-import { useSelector } from 'react-redux';
 import axiosInstance from '../../utils/axios';
 
 const initialValues={
@@ -13,34 +14,34 @@ const initialValues={
     password:"",
     cpassword:"",
     img:""
-
 }
 const Signup = () => {
 const navigate=useNavigate()
+const dispatch=useDispatch()
 const isAuthenticated=useSelector((state)=>state.userData.isAuthenticated)
 const {values,handleBlur,handleSubmit,handleChange,errors,touched}=useFormik({
     initialValues,
     validationSchema:validation,
     onSubmit:async (values,{setErrors})=>{
         try {
-            await axiosInstance.post('/signup',values,{ headers: {'Content-Type': 'multipart/form-data'}})
+            await axiosInstance.post('/signup',values) 
             navigate('/')
         } catch (err) {
             if (err.response && err.response.status === 409) {
                 setErrors({ email: 'Email is already in use' });
             }
-            console.log('error',err);
+           
         }
     }
 
 })
 useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    console.log(token);
-    if (token) {
-      navigate("/home", { replace: true });
+    let token=localStorage.getItem('jwt')
+    if(token)
+    {
+      navigate('/home',{ replace: true })
     }
-  },[]);
+  }, [useSelector]);
   return (
     <div>
             <div className="signup-container">
@@ -49,7 +50,7 @@ useEffect(() => {
                         <div className="heading">
                             <h1>Signup Now</h1>
                         </div>
-                        <form  onSubmit={handleSubmit}>
+                        <form  onSubmit={handleSubmit} encType='multipart/form-data'>
                             <div>
                                 <input
                                     type="text"
@@ -125,7 +126,6 @@ useEffect(() => {
                                     id="fileInput"
                                     required
                                     name='img'
-                                    accept="image/*"
                                     value={values.img}
                                     onChange={handleChange}
                                     onBlur={handleBlur}

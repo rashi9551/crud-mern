@@ -5,6 +5,8 @@ const userRouter=require('./routes/userRouter');
 const adminRouter=require('./routes/adminRouter');
 const cors=require('cors');
 const cookieParse=require('cookie-parser');
+const multer = require('multer');
+const path = require('path');
 
 env.config();
 const port=process.env.port
@@ -16,13 +18,12 @@ const corsOptions = {
 app.use(cookieParse());
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
 app.use('/uploads',express.static('uploads'))
+app.use(express.urlencoded({extended:true}));
 
 
 app.use('/',userRouter);
 // app.use('/admin',adminRouter);
-
 
 mongoose.
     connect(process.env.Mongo_URL)

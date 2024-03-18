@@ -1,12 +1,13 @@
 
 const {generateToken}=require('../utils/generateToken')
-const userModel=require('../Models/UserModel')
+const userModel=require('../Models/UserModel');
+const { use } = require('../routes/userRouter');
 
 
 const signup= async (req,res)=>{
     try {
-        console.log("dfdfd");
         const {name,email,phone,password,img}=req.body
+        console.log(req.file);
         const userExist=await userModel.findOne({email:email})
         if(userExist)
         {
@@ -55,7 +56,6 @@ const login = async (req, res) => {
         } else {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
-        console.log("cllchec");
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: 'Internal server error' });
@@ -81,9 +81,33 @@ const home=async(req,res)=>{
     }
 }
 
+const updateProfile =async (req,res)=>{
+    try {
+        const {id,values}=req.body
+        const user=await userModel.findById(id)
+        const existUser=await userModel.findOne({email:values.email})
+        if(existUser && user.email!=values.email){
+            res.status(409).json({success:false,message:"user alraedy exist"})
+        }
+        else if(user){
+            user.name = values.name;
+            user.phone = values.phone;
+            user.email = values.email;
+            await user.save();
+            res.status(200).json({success:true,message:"succesfully updated"})
+        }else{
+            res.status(404).json({success:false,message:"user not found"})
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({success:false,message:"internal secer issue"})
+    }
+}
+
 
 module.exports={
     signup,
     login,
-    home
+    home,
+    updateProfile
 }

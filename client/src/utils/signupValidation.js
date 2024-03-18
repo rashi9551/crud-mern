@@ -8,4 +8,9 @@ import * as yup from 'yup'
     cpassword:yup.string().oneOf([yup.ref('password')],'Password should match').required('confirm password is required')
 }) 
 
+export const validationUpdate=yup.object({
+    name:yup.string().trim().required('Name is required'),
+    email:yup.string().email('Invalid Email').required('E-mail is required'),
+    phone:yup.string().matches(/^\d{10}$/, 'Enter valid Number').required('Enter the phone Number')
+}) 
 export default validation

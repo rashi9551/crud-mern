@@ -1,52 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { checkUserAuthentication } from "../../Redux/userSlice";
+import { checkUserAuthentication, logout } from "../../Redux/userSlice";
 import "./Home.css";
-
-import axiosInstance from "../../utils/axios";
 import Login from "../Login/Login";
+
 
 const Home = () => {
   const [data, setData] = useState();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const datas=useSelector((state)=>state.userData)
+  const isAuthenticated=useSelector((state)=>state.userData.isAuthenticated)
 
   const Logout = () => {
+    dispatch(logout())
     localStorage.clear();
     navigate("/");
   };
-
   useEffect(() => {
-    const id = localStorage.getItem("id");
-    const token = localStorage.getItem("jwt");
-    if(!token)
+    dispatch(checkUserAuthentication())
+    setData(datas)
+    console.log(isAuthenticated);
+    if(!isAuthenticated)
     {
-      navigate('/')
+        navigate('/')
     }
-    axiosInstance
-      .get("/home", {
-        params: {
-          id: id,
-          token: token,
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((err) => {
-        console.error(err.message);
-        if (err.response && err.response.status === 401) {
-          console.log("user not found");
-        }
-        if (err.response && err.response.status === 401) {
-          console.log("user not found");
-        }
-      });
-  }, []);
-  useEffect(() => {
-    dispatch(checkUserAuthentication());
-  }, [dispatch]);
+  }, [navigate]);
 
   if (!data) {
     return <Login />;

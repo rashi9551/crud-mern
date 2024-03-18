@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import Home from './Components/Home/Home';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProfileUpdate from './Components/profileUpdate/ProfileUpdate';
 
 
 
@@ -18,6 +19,7 @@ function App() {
             <Route path='/' element={<Login/>}/>
             <Route path='/signup'element={<Signup/>} />
             <Route path='/home'element={<Home/>} />
+            <Route path='/profile-update'element={<ProfileUpdate/>} />
           </Routes>
         </Router>
 

@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import axiosInstance from "../../utils/axios";
-import { login } from "../../Redux/userSlice";
+import { checkUserAuthentication, login } from "../../Redux/userSlice";
 import { toast } from "react-toastify";
 
 const initialValues = {
@@ -15,6 +15,7 @@ const initialValues = {
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isAuthenticated=useSelector((state)=>state.userData.isAuthenticated)
   const { values, handleChange, handleSubmit, touched, errors } = useFormik({
     initialValues,
     validationSchema: yup.object({
@@ -26,7 +27,9 @@ const Login = () => {
         const response = await axiosInstance.post("/login", values);
         localStorage.setItem("jwt", response.data.token);
         localStorage.setItem("id", response.data._id);
-        localStorage.setItem("img", response.data.img);
+        localStorage.setItem("name", response.data.name);
+        localStorage.setItem("email", response.data.email);
+        localStorage.setItem("phone", response.data.phone);
         dispatch(login(response.data));
         navigate("/home");
         toast.success("Login successful!", {
@@ -45,12 +48,14 @@ const Login = () => {
     },
   });
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    console.log(token);
-    if (token) {
-      navigate("/home", { replace: true });
+    dispatch(checkUserAuthentication())
+    console.log(isAuthenticated);
+    let token=localStorage.getItem('jwt')
+    if(token)
+    {
+      navigate('/home',{ replace: true })
     }
-  },[]);
+  }, [useSelector]);
   return (
     <div>
       <div>
