@@ -26,7 +26,7 @@ const Home = () => {
     {
         navigate('/')
     }
-  }, [navigate]);
+  }, [navigate,isAuthenticated]);
 
   if (!data) {
     return <Login />;

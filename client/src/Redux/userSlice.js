@@ -24,6 +24,7 @@ const initialState={
             state.phone = action.payload.phone;
             state.email = action.payload.email;
             state.isAdmin=action.payload.isAdmin;
+
         },
         logout:(state)=>{
             state.isAuthenticated=false;

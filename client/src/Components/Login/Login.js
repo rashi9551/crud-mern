@@ -98,7 +98,11 @@ const Login = () => {
               </form>
               <div className="login-footer">
                 <p>Not yet registered?</p>
-                <p className="signup-p" onClick={() => navigate("/signup")}>
+                <p className="signup-p" onClick={() => navigate("/signup",{
+                    state: {
+                      from:"Login"
+                    }
+                  })}>
                   Signup here!
                 </p>
               </div>

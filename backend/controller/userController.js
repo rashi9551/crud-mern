@@ -1,7 +1,6 @@
 
 const {generateToken}=require('../utils/generateToken')
 const userModel=require('../Models/UserModel');
-const { use } = require('../routes/userRouter');
 
 
 const signup= async (req,res)=>{

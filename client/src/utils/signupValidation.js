@@ -13,4 +13,8 @@ export const validationUpdate=yup.object({
     email:yup.string().email('Invalid Email').required('E-mail is required'),
     phone:yup.string().matches(/^\d{10}$/, 'Enter valid Number').required('Enter the phone Number')
 }) 
+export const validationAdmin=yup.object({
+    email:yup.string().email('Invalid Email').required('E-mail is required'),
+    password:yup.string().required("Password is required")
+}) 
 export default validation

@@ -23,7 +23,7 @@ app.use(express.urlencoded({extended:true}));
 
 
 app.use('/',userRouter);
-// app.use('/admin',adminRouter);
+app.use('/admin',adminRouter);
 
 mongoose.
     connect(process.env.Mongo_URL)

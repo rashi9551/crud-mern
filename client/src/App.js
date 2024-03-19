@@ -7,7 +7,9 @@ import Home from './Components/Home/Home';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProfileUpdate from './Components/profileUpdate/ProfileUpdate';
-
+import AdminLogin from './Components/Admin/Login/AdminLogin';
+import Dashboard from './Components/Admin/Dashboard/Dashboard';
+import AddUser from './Components/Admin/AddUser/AddUser';
 
 
 function App() {
@@ -20,6 +22,9 @@ function App() {
             <Route path='/signup'element={<Signup/>} />
             <Route path='/home'element={<Home/>} />
             <Route path='/profile-update'element={<ProfileUpdate/>} />
+            <Route path='/adminLogin'element={<AdminLogin/>} />
+            <Route path='/dashboard'element={<Dashboard/>} />
+            <Route path='/addUser'element={<AddUser/>} />
           </Routes>
         </Router>
 
