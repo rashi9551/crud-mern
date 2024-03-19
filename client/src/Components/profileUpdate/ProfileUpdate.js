@@ -9,28 +9,29 @@ import axiosInstance from "../../utils/axios";
 import { toast } from "react-toastify";
 
 const Profileupdate = () => {
-  const initialValues = useSelector((state)=>state.userData)
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  dispatch(checkUserAuthentication())
+  const initialValues = useSelector((state)=>state.userData)
   const isAuthenticated=useSelector((state)=>state.userData.isAuthenticated)
   const Logout = () => {
     dispatch(logout());
-    localStorage.clear();
+    localStorage.removeItem('userToken');
     navigate("/");
   };
+  
   const { values, handleChange, handleSubmit, touched, errors } = useFormik({
     initialValues,
     validationSchema: validationUpdate,
     onSubmit: async (values, { setErrors }) => {
       try {
-        const token = localStorage.getItem("jwt");
+        const token = localStorage.getItem("userToken");
         const id = localStorage.getItem("id");
         await axiosInstance.post("/update", { token, id, values });
         localStorage.setItem('phone',values.phone)
         localStorage.setItem('name',values.name)
         localStorage.setItem('email',values.email)
         dispatch(checkUserAuthentication())
-        console.log("hgfhghgfhgf");
         navigate("/home");
         toast.success("updated successful!", {
           position: "top-right",
@@ -50,7 +51,8 @@ const Profileupdate = () => {
   useEffect(() => {
     dispatch(checkUserAuthentication())
     console.log(isAuthenticated);
-    if(!isAuthenticated)
+    const token=localStorage.getItem('userToken')
+    if(!token)
     {
         navigate('/',{ replace: true })
     }

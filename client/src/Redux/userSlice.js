@@ -37,12 +37,11 @@ const initialState={
 
         },
         checkUserAuthentication: (state) => {
-            const jwt = localStorage.getItem('jwt');
+            const jwt = localStorage.getItem('userToken');
             const id = localStorage.getItem('id');
             const name=localStorage.getItem('name')
             const email=localStorage.getItem('email')
             const phone=localStorage.getItem('phone')
-            console.log(phone);
             if (jwt) {
               const [, payloadBase64] = jwt.split('.'); // Split JWT token into parts and get the payload part
               const decodedPayload = JSON.parse(atob(payloadBase64));

@@ -10,6 +10,6 @@ adminRouter.post('/adlogin',adminController.adminLogin)
 adminRouter.get('/getUsers',adminController.getUsers)
 adminRouter.delete('/deleteUser',protect,adminController.deleteUser)
 adminRouter.post('/addUser',upload.single('img'),protect,adminController.addUser)
-
+adminRouter.put('/updateUser',protect,adminController.updateUser)
 
 module.exports=adminRouter

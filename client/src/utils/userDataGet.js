@@ -1,6 +1,6 @@
 import axiosInstance from "./axios";
 
-const userDataAuth= async(id,token)=>{
+const userDataAuth= async(id,token,setData)=>{
      axiosInstance
       .get("/getUser", {
         params: {
@@ -13,7 +13,7 @@ const userDataAuth= async(id,token)=>{
         localStorage.setItem('name',name)
         localStorage.setItem('phone',phone)
         localStorage.setItem('email',email)
-        console.log(localStorage.getItem('phone'),"prof")
+        setData(response.data)
       })
       .catch((err) => {
         console.error(err.message);

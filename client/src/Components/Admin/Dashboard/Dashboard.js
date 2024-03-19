@@ -23,13 +23,12 @@ function Dashboard() {
     }, []);
     const deleteUser = async(id)=>{
         try {
-            const token=localStorage.getItem('jwt')
+            const token=localStorage.getItem('adminToken')
             const response=await axiosInstance.delete('/admin/deleteUser',{
               params: {
                 id: id,
                 token: token,
               }})
-            console.log("ivida");
             if(response.data.msg==='deleted'){
                 const newusers=users.filter((user)=>user._id!==id)
                 setUsers(newusers)
@@ -55,9 +54,16 @@ function Dashboard() {
     }
 
     const adlogout=()=>{
-        localStorage.clear()
+        localStorage.removeItem('adminToken')
         navigate('/adminLogin')
     }
+    useEffect(()=>{
+        const token=localStorage.getItem('adminToken')
+            console.log(token,"user token");
+        if(!token){
+            navigate('/adminLogin')
+        }
+    },[])
 
   return (
     <div>
@@ -107,13 +113,12 @@ function Dashboard() {
                                     <td>{users.createdAt}</td>
                                     <td>
                                             <i 
-                                            onClick={addUser}
-                                            // {""
-                                            //     ()=>{
-                                            //     dispatch(UserUpdateAction(users._id))
-                                            //     navigate(`/admin-update?id=${users._id}`)
-                                            // }
-                                        // } 
+                                            onClick=
+                                            {
+                                                ()=>{
+                                                navigate(`/admin-update?id=${users._id}`)
+                                            }
+                                        } 
                                             className="edit material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
 
                                             <i onClick={()=>deleteUser(users._id)} 

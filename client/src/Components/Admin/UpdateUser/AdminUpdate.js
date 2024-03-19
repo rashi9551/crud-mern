@@ -1,17 +1,15 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import userDataAuth from '../../../utils/userDataGet';
 
-import './Update.css'
+import './AdminUpdate.css'
 import axiosInstance from '../../../utils/axios';
-// import { UserUpdateAction } from '../../../services/redux/action/userUpdate'
+import { set } from 'mongoose';
 
 function AdminUpdate() {
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [previewImage, setPreviewImage] = useState(null);
-    // const user = useSelector((state) => state.UserUpdate);
+    const [data,setData]=useState({})
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -20,48 +18,28 @@ function AdminUpdate() {
     const navigate = useNavigate();
 
 
-    useEffect(() => {
-        const token=localStorage.getItem('jwt')
-        axiosInstance
-            .get(`/admin/editUser/${id}`)
-            .then((response) => {
-                dispatch(UserUpdateAction('username', response.data.name));
-                dispatch(UserUpdateAction('email', response.data.email));
-                dispatch(UserUpdateAction('mobile', response.data.phone));
-                dispatch(UserUpdateAction('image', response.data.img));
-            })
-            .catch((error) => {
-                console.log(error);
-                alert(error.response.data.message);
-            });
-    }, [axiosInstance, dispatch, id]);
+    useEffect( () => {
+        const token=localStorage.getItem('adminToken')
+        userDataAuth(id,token,setData)
+    }, [axiosInstance]);
+    useEffect(()=>{
+        const token=localStorage.getItem('adminToken')
+        if(!token){
+            navigate('/adminLogin')
+        }
+    },[])
 
-    // const handleImageChange = (e) => {
-    //     const image = e.target.files[0];
-    //     if (image) {
-    //         setSelectedImage(image);
-    //         setPreviewImage(URL.createObjectURL(image));
-    //     }
-    // };
-
-    const onChange = (e) => {
-        dispatch(UserUpdateAction(e.target.name, e.target.value));
-    };
 
     const handleSubmit = async(event)=>{
         event.preventDefault();
         try {
-            const formData = new FormData();
-            if (selectedImage) {
-                formData.append('image', selectedImage);
-            }
-            formData.append('username', user.name);
-            formData.append('email', user.email);
-            formData.append('mobile', user.phone);
-            formData.append('password', user.password);
-            const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-            const response = await axiosInstance.put(`/admin/updateUser/${id}`, {formData,token});
-            if (response.data.email) {
+            const token=localStorage.getItem('adminToken')
+            const response = await axiosInstance.put('/admin/updateUser', {
+                values: data,
+                token,
+                id
+            });
+            if (response.data.message==="succesfully updated") {
                 navigate('/dashboard');
             } else {
                 alert(response.data.message);
@@ -71,6 +49,20 @@ function AdminUpdate() {
             alert(error.response.data.message);
         }
     }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
+    
+    useEffect(()=>{
+        const token=localStorage.getItem('adminToken')
+        if(!token){
+            navigate('/adminLogin')
+        }
+    },[])
 
 
     return (
@@ -86,11 +78,10 @@ function AdminUpdate() {
                                 <input
                                     type="text"
                                     className="input"
-                                    name="username"
+                                    name="name"
                                     placeholder="Enter your name"
-                                    value={user.name}
-                                    onChange={onChange}
-                                   
+                                    value={data.name}
+                                    onChange={handleChange}                                   
                                 />
                             </div>
                             <div>
@@ -99,34 +90,34 @@ function AdminUpdate() {
                                     className="input"
                                     name="email"
                                     placeholder="Enter your email"
-                                    value={user.name}
-                            onChange={onChange}
+                                    value={data.email}
+                                    onChange={handleChange}
                                 />
                             </div>
                             <div>
                                 <input
                                     type="text"
                                     className="input"
-                                    name="mobile"
+                                    name="phone"
                                     placeholder="Enter your number"
-                                    value={user.phone}
-                            onChange={onChange}
+                                    value={data.phone}
+                                    onChange={handleChange}
                                 />
                             </div>
                             <div className="image-selection">
                                 <label htmlFor="fileInput" className="custom-file-upload">
-                                    {user.img || previewImage ? "Choose another photo" : "Select a profile Photo"}
+                                    {data.img? "Choose another photo" : "Select a profile Photo"}
                                 </label>
                                 <input
                                     className="file-input"
                                     type="file"
-                                    name="image"
+                                    name="img"
                                     id="fileInput"
-                                    
-                                    style={{ display: "none" }}
+                                    value={data.img}
+                                    onChange={handleChange}                                    style={{ display: "none" }}
                                 />
                             </div>
-                            <div>
+                            {/* <div>
                                 {previewImage ? (
                                     <img
                                         style={{ width: "auto", height: "100px", margin: "5px 0 15px 0" }}
@@ -151,7 +142,7 @@ function AdminUpdate() {
                                 )
 
                                 }
-                            </div>
+                            </div> */}
                             <button type='submit'>Update Profile</button>
                         </form>
                     </div>

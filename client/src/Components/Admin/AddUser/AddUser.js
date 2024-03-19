@@ -1,7 +1,6 @@
 import React ,{useEffect} from 'react'
 import './AddUser.css'
 import {useFormik} from 'formik'
-import { useDispatch,useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import validation from '../../../utils/signupValidation';
 import axiosInstance from '../../../utils/axios';
@@ -18,13 +17,12 @@ const initialValues={
 }
 const AddUser = () => {
     const navigate=useNavigate()
-    const isAuthenticated=useSelector((state)=>state.userData.isAuthenticated)
     const {values,handleBlur,handleSubmit,handleChange,errors,touched}=useFormik({
         initialValues,
         validationSchema:validation,
         onSubmit:async (values,{setErrors})=>{
             try {
-                const token=localStorage.getItem('jwt')
+                const token=localStorage.getItem('adminToken')
                 await axiosInstance.post('/admin/addUser',{values,token}) 
                 navigate('/dashboard')
                 toast.success("user add successful!", {
@@ -44,13 +42,12 @@ const AddUser = () => {
         }
 
     })
-// useEffect(() => {
-//     let token=localStorage.getItem('jwt')
-//     if(token)
-//     {
-//       navigate('/home',{ replace: true })
-//     }
-//   }, [useSelector]);
+    useEffect(()=>{
+        const token=localStorage.getItem('adminToken')
+        if(!token){
+            navigate('/adminLogin')
+        }
+    },[])
   return (
     <div>
             <div className="signup-container">

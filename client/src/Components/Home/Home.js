@@ -15,14 +15,15 @@ const Home = () => {
 
   const Logout = () => {
     dispatch(logout())
-    localStorage.clear();
+    localStorage.removeItem('userToken');
     navigate("/");
   };
   useEffect(() => {
     dispatch(checkUserAuthentication())
     setData(datas)
-    console.log(isAuthenticated);
-    if(!isAuthenticated)
+    const token=localStorage.getItem('userToken')
+    console.log(token,"user token");
+    if(!token)
     {
         navigate('/')
     }

@@ -2,7 +2,6 @@ import React ,{useEffect} from 'react'
 import './Signup.css'
 import {useFormik} from 'formik'
 import { useDispatch,useSelector } from "react-redux";
-import { checkUserAuthentication, logout } from "../../Redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import validation from '../../utils/signupValidation';
 import axiosInstance from '../../utils/axios';
@@ -36,12 +35,12 @@ const {values,handleBlur,handleSubmit,handleChange,errors,touched}=useFormik({
 
 })
 useEffect(() => {
-    let token=localStorage.getItem('jwt')
+    let token=localStorage.getItem('userToken')
     if(token)
     {
       navigate('/home',{ replace: true })
     }
-  }, [useSelector]);
+  }, []);
   return (
     <div>
             <div className="signup-container">

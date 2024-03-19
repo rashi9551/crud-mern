@@ -2,7 +2,7 @@ const express=require('express')
 const router=express.Router()
 const userController=require('../controller/userController')
 const { protect } = require('../Middleware/authMiddleware')
-const upload=require('../Middleware/multer')
+const  upload  =require( "../Middleware/multer")
 
 
 

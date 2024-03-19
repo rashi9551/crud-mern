@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from "formik";
 import axiosInstance from '../../../utils/axios';
 import {useNavigate} from 'react-router-dom'
@@ -20,11 +20,9 @@ function AdminLogin() {
         onSubmit:async (values,{setErrors})=>{
          try{
           const response=await axiosInstance.post('/admin/adlogin',values)  
-          localStorage.setItem("jwt", response.data.token);
-          console.log(response.data,'ll');
+          localStorage.setItem("adminToken", response.data.token);
           dispatch(login(response.data))
-          let token=localStorage.getItem('jwt')
-          console.log(token,"token");
+          let token=localStorage.getItem('adminToken')
           navigate('/dashboard')
          }catch(err){
           if (err.response && err.response.status === 401) {
@@ -33,6 +31,13 @@ function AdminLogin() {
          }
         }
       })
+
+    useEffect(()=>{
+        const token=localStorage.getItem('adminToken')
+        if(token){
+            navigate('/dashboard')
+        }
+    },[])
   return (
     <div className='admin-container'>
     <div className='admin-login-form'>

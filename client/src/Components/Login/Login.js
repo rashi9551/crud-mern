@@ -25,7 +25,7 @@ const Login = () => {
     onSubmit: async (values, { setErrors }) => {
       try {
         const response = await axiosInstance.post("/login", values);
-        localStorage.setItem("jwt", response.data.token);
+        localStorage.setItem("userToken", response.data.token);
         localStorage.setItem("id", response.data._id);
         localStorage.setItem("name", response.data.name);
         localStorage.setItem("email", response.data.email);
@@ -48,14 +48,13 @@ const Login = () => {
     },
   });
   useEffect(() => {
-    dispatch(checkUserAuthentication())
     console.log(isAuthenticated);
-    let token=localStorage.getItem('jwt')
+    let token=localStorage.getItem('userToken')
     if(token)
     {
       navigate('/home',{ replace: true })
     }
-  }, [useSelector]);
+  }, []);
   return (
     <div>
       <div>

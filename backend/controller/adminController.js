@@ -4,12 +4,9 @@ const userModel=require('../Models/UserModel');
 const adminLogin=async (req,res)=>{
     try {
         const {email,password}=req.body
-        console.log(req.body);
         const login=await userModel.findOne({email:email})
-        console.log('l',login,login.isAdmin,login.name);
         if(login && await login.matchPassword(password) && login.email=='admin@gmail.com'){
         const token = generateToken(res,login._id)
-          console.log(login,'llp',login.isAdmin);
           return res.status(200).json({
             token,
             _id: login._id,
@@ -30,7 +27,6 @@ const adminLogin=async (req,res)=>{
 
 const getUsers=async(req,res)=>{
   try{
-  console.log("ivida ethi");
       const data=await userModel.find({email:{$ne:"admin@gmail.com"}})
      return res.status(200).json({ data: data });
   }catch(error){
@@ -55,7 +51,6 @@ const addUser= async (req,res)=>{
   try {
       const {values}=req.body
       const {name,email,phone,password,img}=values
-      console.log(req.file);
       const userExist=await userModel.findOne({email:email})
       if(userExist)
       {
@@ -78,9 +73,33 @@ const addUser= async (req,res)=>{
   }
 }
 
+const updateUser=async(req,res)=>{
+  try {
+    const {id,values}=req.body
+    const user=await userModel.findById(id)
+    const existUser=await userModel.findOne({email:values.email})
+    if(existUser && user.email!=values.email){
+        res.status(409).json({success:false,message:"user alraedy exist"})
+    }
+    else if(user){
+        user.name = values.name;
+        user.phone = values.phone;
+        user.email = values.email;
+        await user.save();
+        res.status(200).json({success:true,message:"succesfully updated"})
+    }else{
+        res.status(404).json({success:false,message:"user not found"})
+    }
+} catch (error) {
+    console.log(error);
+    res.status(500).json({success:false,message:"internal secer issue"})
+}
+}
+
 module.exports={
     adminLogin,
     getUsers,
     deleteUser,
-    addUser
+    addUser,
+    updateUser
 }

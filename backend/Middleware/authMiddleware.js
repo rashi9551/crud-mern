@@ -3,13 +3,13 @@ const asyncHandler = require("express-async-handler");
 const User = require("../Models/UserModel");
 
 const protect = asyncHandler(async (req, res, next) => {
-  let token = req.query.token || req.body.token;
+  let token = req.query.token || req.body.token || req.params.token;
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = await User.findById({ _id: decoded.userId }).select(
         "-password"
-      );
+        );
       next();
     } catch (error) {
       res.status(401).json({ error: "Not authorized, no token" });

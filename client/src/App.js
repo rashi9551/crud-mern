@@ -10,6 +10,7 @@ import ProfileUpdate from './Components/profileUpdate/ProfileUpdate';
 import AdminLogin from './Components/Admin/Login/AdminLogin';
 import Dashboard from './Components/Admin/Dashboard/Dashboard';
 import AddUser from './Components/Admin/AddUser/AddUser';
+import AdminUpdate from './Components/Admin/UpdateUser/AdminUpdate';
 
 
 function App() {
@@ -22,9 +23,11 @@ function App() {
             <Route path='/signup'element={<Signup/>} />
             <Route path='/home'element={<Home/>} />
             <Route path='/profile-update'element={<ProfileUpdate/>} />
+            {/* admin */}
             <Route path='/adminLogin'element={<AdminLogin/>} />
             <Route path='/dashboard'element={<Dashboard/>} />
             <Route path='/addUser'element={<AddUser/>} />
+            <Route path='/admin-update'element={<AdminUpdate/>} />
           </Routes>
         </Router>
 
