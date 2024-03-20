@@ -14,6 +14,7 @@ const userDataAuth= async(id,token,setData)=>{
         localStorage.setItem('phone',phone)
         localStorage.setItem('email',email)
         setData(response.data)
+        return "getted"
       })
       .catch((err) => {
         console.error(err.message);

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import userDataAuth from '../../../utils/userDataGet';
@@ -14,7 +13,6 @@ function AdminUpdate() {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id');
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
 

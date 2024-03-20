@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { checkUserAuthentication, logout } from "../../Redux/userSlice";
+import Swal from 'sweetalert2'
 import "./Home.css";
 import Login from "../Login/Login";
+import userDataAuth from "../../utils/userDataGet";
 
 
 const Home = () => {
@@ -14,20 +16,41 @@ const Home = () => {
   const isAuthenticated=useSelector((state)=>state.userData.isAuthenticated)
 
   const Logout = () => {
-    dispatch(logout())
-    localStorage.removeItem('userToken');
-    navigate("/");
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You are going to logout",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Logout"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Logout",
+            text: "Logout success",
+            icon: "success"
+          });
+          dispatch(logout())
+          localStorage.removeItem('id')
+          localStorage.removeItem('userToken');
+          navigate("/");
+          
+        }
+      }); } catch (error) {
+        console.log(error);
+      }
+    
   };
   useEffect(() => {
     dispatch(checkUserAuthentication())
     setData(datas)
-    const token=localStorage.getItem('userToken')
-    console.log(token,"user token");
-    if(!token)
+    if(!isAuthenticated)
     {
         navigate('/')
     }
-  }, [navigate,isAuthenticated]);
+  }, [navigate,isAuthenticated,dispatch]);
 
   if (!data) {
     return <Login />;
