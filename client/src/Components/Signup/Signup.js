@@ -5,6 +5,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import validation from '../../utils/signupValidation';
 import axiosInstance from '../../utils/axios';
+import Swal from 'sweetalert2'
 
 const initialValues={
     name:"",
@@ -23,8 +24,24 @@ const {values,handleBlur,handleSubmit,handleChange,errors,touched}=useFormik({
     validationSchema:validation,
     onSubmit:async (values,{setErrors})=>{
         try {
-            await axiosInstance.post('/signup',values) 
-            navigate('/')
+            const formData = new FormData();
+            formData.append("name", values.name);
+            formData.append("email", values.email);
+            formData.append("phone", values.phone);
+            formData.append("password", values.password);
+            formData.append("cpassword", values.cpassword);
+            formData.append("img", values.img);
+
+            // await axiosInstance.post('/signup',values) 
+            await axiosInstance.post("/signup", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+              });
+              navigate('/')
+              Swal.fire({
+                title: "User created",
+                text: "User created ",
+                icon: "success"
+              });
         } catch (err) {
             if (err.response && err.response.status === 409) {
                 setErrors({ email: 'Email is already in use' });
@@ -131,7 +148,7 @@ useEffect(() => {
                                     style={{ display: "none" }}
                                 />
                             </div>
-                            <div>
+                            {/* <div>
                                 {values.img && (
                                     <img
                                         style={{ width: "auto", height: "100px", margin: "5px 0 15px 0" }}
@@ -140,7 +157,7 @@ useEffect(() => {
                                         className="profile-image"
                                     />
                                 )}
-                            </div>
+                            </div> */}
                             <button type='submit'>Signup Now</button>
                         </form>
                         <p>

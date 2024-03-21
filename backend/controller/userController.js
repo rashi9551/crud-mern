@@ -6,7 +6,7 @@ const userModel=require('../Models/UserModel');
 const signup= async (req,res)=>{
     try {
         const {name,email,phone,password,img}=req.body
-        console.log(req.file);
+        console.log(req.file[0].fileName);
         const userExist=await userModel.findOne({email:email})
         if(userExist)
         {

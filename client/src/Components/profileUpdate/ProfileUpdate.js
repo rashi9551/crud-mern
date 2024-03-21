@@ -7,6 +7,8 @@ import { useFormik } from "formik";
 import { validationUpdate } from "../../utils/signupValidation";
 import axiosInstance from "../../utils/axios";
 import { toast } from "react-toastify";
+import Swal from 'sweetalert2'
+
 
 const Profileupdate = () => {
   const navigate = useNavigate();
@@ -15,9 +17,27 @@ const Profileupdate = () => {
   const initialValues = useSelector((state)=>state.userData)
   const isAuthenticated=useSelector((state)=>state.userData.isAuthenticated)
   const Logout = () => {
-    dispatch(logout());
-    localStorage.removeItem('userToken');
-    navigate("/");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You are going to logout",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Logout"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Logout",
+          text: "Logout success",
+          icon: "success"
+        });
+        dispatch(logout())
+        localStorage.removeItem('userToken');
+        navigate("/");
+        
+      }
+    });
   };
   
   const { values, handleChange, handleSubmit, touched, errors } = useFormik({

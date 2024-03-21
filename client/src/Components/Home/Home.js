@@ -38,7 +38,8 @@ const Home = () => {
           navigate("/");
           
         }
-      }); } catch (error) {
+      });
+     } catch (error) {
         console.log(error);
       }
     
